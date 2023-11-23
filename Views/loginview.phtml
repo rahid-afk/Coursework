@@ -1,14 +1,14 @@
 <?php require ('templates/header.phtml'); ?>
 <div class="login-form">
     <h2>Login</h2>
-    <form method="post" action="index.php?controller=auth&action=login">
+    <form method="post" action="logincontroller.php">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input class="form-control" type="text" id="username" name="username" required>
         <br>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input class="form-control" type="password" id="password" name="password" required>
         <br>
-        <input type="submit" value="Login" name="loginbutton">
+        <input class="form-control" type="submit" value="Login" name="loginbutton">
     </form>
 </div>
 
