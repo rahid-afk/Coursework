@@ -14,6 +14,7 @@ if (isset($_POST['loginbutton'])) {
 //        header_remove("Location: logincontroller.php");
 //        echo "You are logged in";
         $_SESSION['login'] = $username;
+        echo 'Welcome ' . $username;
     } else {
         echo "Error in username and/or password";
     }

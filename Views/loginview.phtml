@@ -1,5 +1,7 @@
-<?php require ('templates/header.phtml'); ?>
-<div class="login-form">
+<?php require ('templates/header.phtml');
+
+if (!isset($_SESSION['login'])){
+    echo '<div class="login-form">
     <h2>Login</h2>
     <form method="post" action="logincontroller.php">
         <label for="username">Username:</label>
@@ -9,7 +11,12 @@
         <input class="form-control" type="password" id="password" name="password" required>
         <br>
         <input class="form-control" type="submit" value="Login" name="loginbutton">
-    </form>
+    </form>';
+}
+//else {
+//    echo 'Welcome ' . $_POST['username'];
+//}?>
+
 </div>
 
 <?php require ('templates/footer.phtml');
