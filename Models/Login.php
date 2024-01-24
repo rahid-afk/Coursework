@@ -3,14 +3,11 @@
 class Login
 {
     public function authenticate($username, $password){
-        if ($username === 'user' && $password === 'password'){
-            $usertype = 'user';
-            return true;
-        } else if ($username === 'admin' && $password === 'admin'){
-            $usertype = 'admin';
-            return true;
-        } else if ($username === 'deliverer' && $password === 'deliverer'){
+        if ($username === 'deliverer' && $password === 'deliverer'){
             $usertype = 'deliverer';
+            return true;
+        } else if ($username === 'manager' && $password === 'manager'){
+            $usertype = 'manager'; //get usertype from database instead
             return true;
         }
         return false;

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once ('Views/loginview.phtml');
+
 
 $view = new stdClass();
 $view->pageTitle = 'Log In';
@@ -15,6 +15,9 @@ if (isset($_POST['loginbutton'])) {
 //        echo "You are logged in";
         $_SESSION['login'] = $username;
         echo 'Welcome ' . $username;
+
+
+        header("Location: index.php");
     } else {
         echo "Error in username and/or password";
     }
@@ -34,3 +37,5 @@ if (isset($_POST['logoutbutton'])){
     unset($_SESSION['login']);
     session_destroy();
 }
+
+require_once ('Views/loginview.phtml');
