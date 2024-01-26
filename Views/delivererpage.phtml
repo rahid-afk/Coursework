@@ -1,26 +1,83 @@
 <?php require('templates/header.phtml') ?>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<?php
+if (isset($_POST['search'])) {
+    $valueToSearch = $_POST['valueToSearch'];
+//    $query = "SELECT * FROM delivery_point WHERE CONCAT ('id', 'name', 'address', 'city', 'postcode', 'deliverer', 'latitude', 'longitude', 'status', 'delivery_photo')
+//                LIKE '%" . $valueToSearch . "'";
+    $query = "SELECT * FROM delivery_point WHERE id LIKE '%" . $valueToSearch . "%' 
+    OR name LIKE '%" . $valueToSearch . "%'
+    OR address LIKE '%" . $valueToSearch . "%'
+    OR city LIKE '%" . $valueToSearch . "%'
+    OR postcode LIKE '%" . $valueToSearch . "%'
+    OR deliverer LIKE '%" . $valueToSearch . "%'
+    OR latitude LIKE '%" . $valueToSearch . "%'
+    OR longitude LIKE '%" . $valueToSearch . "%'
+    OR status LIKE '%" . $valueToSearch . "%'";
+//    OR delivery_photo LIKE '%" . $valueToSearch . "%'";
+
+    $search_result = filterTable($query);
+} else {
+    $query = "SELECT * FROM delivery_point";
+    $search_result = filterTable($query);
+}
+function filterTable($query)
+{
+    $connect = mysqli_connect("poseidon.salford.ac.uk", "aee805", "Polyjuice23!", "aee805");
+    $filter_Result = mysqli_query($connect, $query);
+    return $filter_Result;
+}
+
+?>
+
+    <!-- Form for filtering through HTML table in Deliverer Page -->
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+        <label class="h4">Filter Table:</label>
+        <input type="text" name="valueToSearch" placeholder="Value To Search" class="form-control"><br>
+        <input type="submit" name="search" value="Filter" class="form-control">
+    </form>
+
+    <!-- Form to display the deliverers deliveries in HTML table -->
+    <form action=" <?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <br>
     <table class="table table-hover">
         <thead>
-        <tr><th>ID</th><th>Name</th><th>Address</th><th>City</th><th>Postcode</th><th>Lat</th><th>Long</th></tr>
-
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Postcode</th>
+            <th>Lat</th>
+            <th>Long</th>
+        </tr>
 
 
         </thead>
         <tbody>
-        <?php foreach ($view->deliveryPointsSet as $deliveryPoint){
-            echo '<tr> <td>' . $deliveryPoint->getID() .
-            '</td> <td>' .  $deliveryPoint->getName() .
-            '</td> <td>' .  $deliveryPoint->getAddress() .
-            '</td> <td>' .  $deliveryPoint->getCity() .
-            '</td> <td>' .  $deliveryPoint->getPostcode() .
-            '</td> <td>' .  $deliveryPoint->getLat() .
-            '</td> <td>' .  $deliveryPoint->getLong();
-        } ?>
+<!--        --><?php //foreach ($view->deliveryPointsSet as $deliveryPoint) {
+//            echo '<tr> <td>' . $deliveryPoint->getID() .
+//                '</td> <td>' . $deliveryPoint->getName() .
+//                '</td> <td>' . $deliveryPoint->getAddress() .
+//                '</td> <td>' . $deliveryPoint->getCity() .
+//                '</td> <td>' . $deliveryPoint->getPostcode() .
+//                '</td> <td>' . $deliveryPoint->getLat() .
+//                '</td> <td>' . $deliveryPoint->getLong();
+//        } ?>
+
+        <?php while ($row = mysqli_fetch_array($search_result)): ?>
+        <tr>
+            <td><?php echo $row['id'];?></td>
+            <td><?php echo $row['name'];?></td>
+            <td><?php echo $row['address'];?></td>
+            <td><?php echo $row['city'];?></td>
+            <td><?php echo $row['postcode'];?></td>
+            <td><?php echo $row['latitude'];?></td>
+            <td><?php echo $row['longitude'];?></td>
+        </tr>
+<?php endwhile;?>
         </tbody>
     </table>
-</form>
+    </form>
 
-<?php require('templates/footer.phtml') ?>
+    <?php require('templates/footer.phtml') ?>
