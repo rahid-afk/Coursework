@@ -2,20 +2,18 @@
 
 <?php
 if (isset($_POST['search'])) {
-    $valueToSearch = $_POST['valueToSearch'];
-//    $query = "SELECT * FROM delivery_point WHERE CONCAT ('id', 'name', 'address', 'city', 'postcode', 'deliverer', 'latitude', 'longitude', 'status', 'delivery_photo')
-//                LIKE '%" . $valueToSearch . "'";
-    $query = "SELECT * FROM delivery_point WHERE id LIKE '%" . $valueToSearch . "%' 
-    OR name LIKE '%" . $valueToSearch . "%'
-    OR address LIKE '%" . $valueToSearch . "%'
-    OR city LIKE '%" . $valueToSearch . "%'
-    OR postcode LIKE '%" . $valueToSearch . "%'
-    OR deliverer LIKE '%" . $valueToSearch . "%'
-    OR latitude LIKE '%" . $valueToSearch . "%'
-    OR longitude LIKE '%" . $valueToSearch . "%'
-    OR status LIKE '%" . $valueToSearch . "%'";
-//    OR delivery_photo LIKE '%" . $valueToSearch . "%'";
+    $query = "SELECT * FROM delivery_point WHERE id LIKE '%" . $_POST['idSearch'] . "%'
+    AND name LIKE '%" . $_POST['nameSearch'] . "%'
+    AND address LIKE '%" . $_POST['addressSearch'] . "%'
+    AND city LIKE '%" . $_POST['citySearch'] . "%'
+    AND postcode LIKE '%" . $_POST['postSearch'] . "%'
+    AND latitude LIKE '%" . $_POST['latSearch'] . "%'
+    AND longitude LIKE '%" . $_POST['longSearch'] . "%'";
 
+    $search_result = filterTable($query);
+
+} elseif (isset($_POST['clear'])){
+    $query = "SELECT * FROM delivery_point";
     $search_result = filterTable($query);
 } else {
     $query = "SELECT * FROM delivery_point";
@@ -29,12 +27,25 @@ function filterTable($query)
 }
 
 ?>
-
     <!-- Form for filtering through HTML table in Deliverer Page -->
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-        <label class="h4">Filter Table:</label>
-        <input type="text" name="valueToSearch" placeholder="Value To Search" class="form-control"><br>
+        <label class="h4">Filter Table:</label><br>
+<!--        <label for="id">ID:</label>-->
+        <input type="text" id="id" name="idSearch" placeholder="ID" class="form-control">
+<!--        <label for="name">Name:</label>-->
+        <input type="text" id="name" name="nameSearch" placeholder="Name" class="form-control">
+<!--        <label for="address">Address:</label>-->
+        <input type="text" id="address" name="addressSearch" placeholder="Address" class="form-control">
+<!--        <label for="city">City:</label>-->
+        <input type="text" id="city" name="citySearch" placeholder="City" class="form-control">
+<!--        <label for="postcode">Postcode:</label>-->
+        <input type="text" id="postcode" name="postSearch" placeholder="Postcode" class="form-control">
+<!--        <label for="lat">Latitude:</label>-->
+        <input type="text" id="lat" name="latSearch" placeholder="Latitude" class="form-control">
+<!--        <label for="long">Longitude:</label>-->
+        <input type="text" id="long" name="longSearch" placeholder="Longitude" class="form-control"><br>
         <input type="submit" name="search" value="Filter" class="form-control">
+        <input type="submit" name="clear" value="Clear Filter" class="form-control">
     </form>
 
     <!-- Form to display the deliverers deliveries in HTML table -->
