@@ -22,8 +22,30 @@ main > .container {
 }
 
 #footer {
-    /*margin_top: 20px;
+    margin_top: 20px;
     text-align: center;
     background-color: #000;
-    color: #fff; */
+    color: #fff;
+    padding-top: 50px;
+}
+
+.pagination{
+    display: inline-block;
+}
+.pagination a{
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid black;
+}
+
+.pagination a.active{
+    background-color: pink;
+}
+
+.pagination a:hover:not(.active){
+    background-color: skyblue;
 }
