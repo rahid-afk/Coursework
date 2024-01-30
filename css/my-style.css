@@ -29,23 +29,30 @@ main > .container {
     padding-top: 50px;
 }
 
+/* CSS for pagination */
 .pagination{
-    display: inline-block;
+    font-family: Arial, sans-serif;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .pagination a{
-    font-weight: bold;
-    font-size: 18px;
     color: black;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
-    border: 1px solid black;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
 }
 
 .pagination a.active{
-    background-color: pink;
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+    pointer-events: none;
 }
 
 .pagination a:hover:not(.active){
-    background-color: skyblue;
+    background-color: #ddd;
 }
