@@ -1,35 +1,42 @@
 <?php require('templates/header.phtml') ?>
 
 <?php
-$connect = mysqli_connect("poseidon.salford.ac.uk", "aee805", "Polyjuice23!", "aee805");
-$pageLimit = 20; /* Setting a limit for how many records will show at one time on each page */
-$page = $_GET['page'];
-if (!isset($page)) {
-    $page = 1;
-} else {
-    $page = $page;
-}
-$firstPage = ($page - 1) * $pageLimit;
-/* Filtering with whatever the deliverer has inputted in the search */
-if (isset($_POST['search'])) {
-    $query = "SELECT * FROM delivery_point WHERE id LIKE '%" . $_POST['idSearch'] . "%'
-    AND name LIKE '%" . $_POST['nameSearch'] . "%'
-    AND address LIKE '%" . $_POST['addressSearch'] . "%'
-    AND city LIKE '%" . $_POST['citySearch'] . "%'
-    AND postcode LIKE '%" . $_POST['postSearch'] . "%'
-    AND latitude LIKE '%" . $_POST['latSearch'] . "%'
-    AND longitude LIKE '%" . $_POST['longSearch'] . "%'
-    LIMIT " . $firstPage . ',' . $pageLimit;
-
-    $search_result = mysqli_query($connect, $query);
-    /* Button to clear the search filters and return the table to normal */
-} elseif (isset($_POST['clear'])) {
-    $query = "SELECT * FROM delivery_point LIMIT " . $firstPage . ',' . $pageLimit;
-    $search_result = mysqli_query($connect, $query);
-} else {
-    $query = "SELECT * FROM delivery_point LIMIT " . $firstPage . ',' . $pageLimit;
-    $search_result = mysqli_query($connect, $query);
-}
+//$connect = mysqli_connect("poseidon.salford.ac.uk", "aee805", "Polyjuice23!", "aee805");
+//$pageLimit = 20; /* Setting a limit for how many records will show at one time on each page */
+//if (!isset($_GET['page'])) {
+//    $page = 1;
+//} else {
+//    $page = $_GET['page'];
+//}
+//$firstPage = ($page - 1) * $pageLimit;
+///* Obtaining deliverer information */
+//$query = "SELECT userid FROM delivery_users WHERE username LIKE '%" . $_SESSION['login'] . "%'";
+//$userid = mysqli_query($connect, $query);
+//$row = mysqli_fetch_assoc($userid);
+//if ($row){
+//    $delivererid = $row['userid'];
+//}
+///* Filtering with whatever the deliverer has inputted in the search */
+//if (isset($_POST['search'])) {
+//    $query = "SELECT * FROM delivery_point WHERE id LIKE '%" . $_POST['idSearch'] . "%'
+//    AND name LIKE '%" . $_POST['nameSearch'] . "%'
+//    AND address LIKE '%" . $_POST['addressSearch'] . "%'
+//    AND city LIKE '%" . $_POST['citySearch'] . "%'
+//    AND postcode LIKE '%" . $_POST['postSearch'] . "%'
+//    AND latitude LIKE '%" . $_POST['latSearch'] . "%'
+//    AND longitude LIKE '%" . $_POST['longSearch'] . "%'
+//    AND deliverer LIKE '%" . $delivererid . "%'
+//    LIMIT " . $firstPage . ',' . $pageLimit;
+//
+//    $search_result = mysqli_query($connect, $query);
+//    /* Button to clear the search filters and return the table to normal */
+//} elseif (isset($_POST['clear'])) {
+//    $query = "SELECT * FROM delivery_point WHERE deliverer LIKE '%" . $delivererid . "%' LIMIT " . $firstPage . ',' . $pageLimit;
+//    $search_result = mysqli_query($connect, $query);
+//} else {
+//    $query = "SELECT * FROM delivery_point WHERE deliverer LIKE '%" . $delivererid . "%' LIMIT " . $firstPage . ',' . $pageLimit;
+//    $search_result = mysqli_query($connect, $query);
+//}
 ?>
     <!-- Form for filtering through HTML table in Deliverer Page -->
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -58,35 +65,37 @@ if (isset($_POST['search'])) {
                 <th>Postcode</th>
                 <th>Lat</th>
                 <th>Long</th>
+                <th>Picture</th>
             </tr>
             </thead>
             <tbody>
-<!--            --><?php
+            <!--            --><?php
             $sq = mysqli_query($connect, "SELECT id FROM delivery_point");
             $row_count = $sq->num_rows;
-            $totalPages = ceil($row_count/10);
+            $totalPages = ceil($row_count / 10);
 
-            if (empty($page) || $page == 1){
+            if (empty($_GET['page']) || $_GET['page'] == 1) {
                 $sql = "SELECT * FROM delivery_point order by id ASC LIMIT 0, 10";
                 $i = 1;
             } else {
-                $i = 10 * ($page -1);
+                $i = 10 * ($_GET['page'] - 1);
                 $sql = "SELECT * FROM delivery_point order by id ASC LIMIT " . $i . ", 10";
-                $i = 10 * $page - 9;
+                $i = 10 * $_GET['page'] - 9;
             }
             $result = mysqli_query($connect, $sql);
             ?>
 
-            <!--        --><?php //foreach ($view->deliveryPointsSet as $deliveryPoint) {
-            //            echo '<tr> <td>' . $deliveryPoint->getID() .
-            //                '</td> <td>' . $deliveryPoint->getName() .
-            //                '</td> <td>' . $deliveryPoint->getAddress() .
-            //                '</td> <td>' . $deliveryPoint->getCity() .
-            //                '</td> <td>' . $deliveryPoint->getPostcode() .
-            //                '</td> <td>' . $deliveryPoint->getLat() .
-            //                '</td> <td>' . $deliveryPoint->getLong();
-            //        } ?>
-            <?php while ($row = mysqli_fetch_array($search_result)){?>
+<!--                    --><?php //foreach ($view->deliveryPointsSet as $deliveryPoint) {
+//                        echo '<tr> <td>' . $deliveryPoint->getID() .
+//                            '</td> <td>' . $deliveryPoint->getName() .
+//                            '</td> <td>' . $deliveryPoint->getAddress() .
+//                            '</td> <td>' . $deliveryPoint->getCity() .
+//                            '</td> <td>' . $deliveryPoint->getPostcode() .
+//                            '</td> <td>' . $deliveryPoint->getLat() .
+//                            '</td> <td>' . $deliveryPoint->getLong() .
+//                            '</td><td>' . '<img src="images/' . $deliveryPoint->getPhotoName() . '" alt="no picture" />' . '</td>';
+//                    } ?>
+            <?php while ($row = mysqli_fetch_array($search_result)) { ?>
                 <tr>
                     <td><?php echo $row['id']; ?></td>
                     <td><?php echo $row['name']; ?></td>
@@ -95,55 +104,56 @@ if (isset($_POST['search'])) {
                     <td><?php echo $row['postcode']; ?></td>
                     <td><?php echo $row['latitude']; ?></td>
                     <td><?php echo $row['longitude']; ?></td>
+<!--                    <td> <img src="images/" --><?php //$view->deliveryPointsSet->getPhotoName()?><!-- alt="no picture" ></td>-->
                 </tr>
-            <?php $i++; }?>
+                <?php $i++;
+            } ?>
             </tbody>
         </table>
         <div class="pagination">
             <?php
-            if ($totalPages > 1){
-                /* Check if there is more than one page */
-                
+            /* Check if there is more than one page */
+            if ($totalPages > 1) {
                 /* If page is greater than one then add the previous arrow symbol as the first link */
-                if (!empty($page) && $page > 1){
-                    $prePage = $page -1;
+                if (!empty($_GET['page']) && $_GET['page'] > 1) {
+                    $prePage = $_GET['page'] - 1;
                     echo "<a href=\"index.php?page=$prePage\">&laquo;</a>";
                 }
                 /* Determine the range of page numbers to display based on the current page */
-                if (empty($page) || $page < 10){
+                if (empty($_GET['page']) || $_GET['page'] < 10) {
                     $k = 2;
                     $num = 10;
 
-                    if ($page == 2 || $page == 1){
+                    if ($_GET['page'] == 2 || $_GET['page'] == 1) {
                         $k = 1;
                     }
-                } elseif ($page < $totalPages){
-                    $k = $page - 4;
-                    $num = $page + 4;
+                } elseif ($_GET['page'] < $totalPages) {
+                    $k = $_GET['page'] - 4;
+                    $num = $_GET['page'] + 4;
                 } else {
-                    $k = $page - 10;
+                    $k = $_GET['page'] - 10;
                     $num = $totalPages;
                 }
 
                 /* Display the pagination links*/
-                if ($page == ""){
+                if ($_GET['page'] == "") {
                     /* Set class of current page to active for CSS styling */
                     echo "<a href=\"#\" class=\"active\">l</a>";
                 }
-                for ($n = $k; $n <= $num && $n<= $totalPages; $n++){
-                    if ($page == $n){
+                for ($n = $k; $n <= $num && $n <= $totalPages; $n++) {
+                    if ($_GET['page'] == $n) {
                         echo "<a href=\"#\" class=\"active\">$n</a>";
                     } else {
                         echo "<a href=\"index.php?page=$n\">$n</a>";
                     }
                 }
-                
+
                 /* Add the next arrow symbol as the last link */
-                if ($page < 1){
+                if ($_GET['page'] < 1) {
                     $nextPage = 2;
                     echo "<a href=\"index.php?page=$nextPage\">&raquo;</a>";
-                } elseif ($page < $totalPages){
-                    $nextPage = $page +1;
+                } elseif ($_GET['page'] < $totalPages) {
+                    $nextPage = $_GET['page'] + 1;
                     echo "<a href=\"index.php?page=$nextPage\">&raquo;</a>";
                 } else {
                     echo "<a href=\"#\" class=\"active\">No More</a>";
@@ -154,28 +164,4 @@ if (isset($_POST['search'])) {
             ?>
         </div>
     </form>
-<?php
-/* Code for Pagination */
-//$sqlconn = mysqli_query($connect, "SELECT * FROM delivery_point"); /* Query to get all data */
-//$totalrows = mysqli_num_rows($sqlconn); /* Counting the total no of rows in the table */
-//$noOfPages = ceil($totalrows / $pageLimit); /* Calculating the total no of pages there will be */
-//
-//echo '<div class="pagination">';
-//if ($page >= 2){
-//    echo "<a href='index.php?page=" . ($page -1) . "'>Prev</a>";
-//}
-//for ($i = 1; $i <= $noOfPages; $i++) {
-//    if ($i == $page){
-//        echo '<a class="active" href = "index.php?page=' . $i . '">' . $i . '</a>';
-//    } else {
-//        echo '<a href = "index.php?page=' . $i . '">' . $i . '</a>';
-//    }
-//}
-//if ($page < $noOfPages){
-//    echo "<a href='index.php?page=" . ($page +1) . "'> Next </a>";
-//}
-//echo '</div>';
-//?>
-
-
 <?php require('templates/footer.phtml') ?>

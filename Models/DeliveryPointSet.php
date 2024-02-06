@@ -6,11 +6,13 @@ require_once ('Models/DeliveryPoint.php');
 class DeliveryPointSet
 {
     protected $_dbHandle, $_dbInstance;
+    protected $_photoName;
 
     public function __construct()
     {
         $this->_dbInstance = Database::getInstance();
         $this->_dbHandle = $this->_dbInstance->getdbConnection();
+        $this->_photoName = _photoName;
     }
 
     public function fetchAllDeliveries(){
@@ -24,5 +26,9 @@ class DeliveryPointSet
             $dataset[] = new DeliveryPoint($row);
         }
         return $dataset;
+    }
+
+    public function getPhotoName(){
+        return $this->_photoName;
     }
 }

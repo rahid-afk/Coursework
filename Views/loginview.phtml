@@ -13,10 +13,10 @@ if (!isset($_SESSION['login'])){
         <input class="form-control" type="submit" value="Login" name="loginbutton">
     </form>';
 }
-//else {
-//    echo 'Welcome ' . $_POST['username'];
-//}?>
-
+else {
+    echo 'Welcome ' . $_POST['username'];
+}
+?>
 </div>
 
 <?php require ('templates/footer.phtml');

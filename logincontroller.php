@@ -5,20 +5,19 @@ session_start();
 $view = new stdClass();
 $view->pageTitle = 'Log In';
 
+
+/* */
+
 if (isset($_POST['loginbutton'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    if ($username == 'a' && $password == 'b'){
-//        header("Location: index.php");
-//        header_remove("Location: logincontroller.php");
-//        echo "You are logged in";
+    if ($username == 'lee' && $password == '123456'){
         $_SESSION['login'] = $username;
-        echo 'Welcome ' . $username;
-
-
-        header("Location: index.php");
-    } else {
+    } elseif ($username == 'rahid' && $password == 'polyjuice23'){
+        $_SESSION['login'] = $username;
+    }
+    else {
         echo "Error in username and/or password";
     }
 
