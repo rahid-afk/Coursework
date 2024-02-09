@@ -1,1 +1,58 @@
-<?php
+<?php require('templates/header.phtml') ?>
+
+    <!-- Form to choose what to do with records in Manager Page -->
+    <form method="post">
+        <label>Create, Read, Update or Delete a Delivery Record:</label>
+        <br>
+        <br>
+        <input type="submit" name="createBtn" value="Create" class="btn btn-light">
+        <input type="submit" name="readBtn" value="Read" class="btn btn-light">
+        <input type="submit" name="updateBtn" value="Update" class="btn btn-light">
+        <input type="submit" name="deleteBtn" value="Delete" class="btn btn-light">
+    </form>
+    <br>
+    <br>
+<?php if (isset($_POST['createBtn'])) { ?>
+    <h2>Create Record</h2>
+    <form action=" <?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-control">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" class="form-control" required>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" class="form-control" required>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" class="form-control" required>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" class="form-control" required>
+        <label for="postcode">Postcode:</label>
+        <input type="text" id="postcode" name="postcode" class="form-control" required>
+        <label for="lat">Latitude:</label>
+        <input type="text" id="lat" name="lat" class="form-control" required>
+        <label for="long">Longitude:</label>
+        <input type="text" id="long" name="long" class="form-control" required>
+    </form>
+<?php } elseif (isset($_POST['deleteBtn'])) { ?>
+    <form action=" <?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+        <label>Delete Record:</label>
+        <form action=" <?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-control">
+            <label for="id">ID:</label>
+            <input type="text" id="id" name="id" class="form-control" required>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" class="form-control" required>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" class="form-control" required>
+            <label for="postcode">Postcode:</label>
+            <input type="text" id="postcode" name="postcode" class="form-control" required>
+            <label for="lat">Latitude:</label>
+            <input type="text" id="lat" name="lat" class="form-control" required>
+            <label for="long">Longitude:</label>
+            <input type="text" id="long" name="long" class="form-control" required>
+        </form>
+    </form>
+    <!--//if (isset($_POST['createBtn'])){-->
+    <!--//    echo '<div id="createForm">';-->
+    <!--//    echo '<h2>Create Record</h2>';-->
+    <!--//    echo '<form action=" method="post"';-->
+    <!--//}-->
+<?php } ?>
