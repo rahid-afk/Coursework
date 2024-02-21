@@ -13,6 +13,67 @@ class DeliveryUserSet {
 
     public function getDelivererID($username){
         $query = "SELECT userid FROM delivery_users WHERE username LIKE '%" . $username . "%'";
+    }
 
+    public function createUser(){
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $usertype = $_POST['usertype'];
+
+        $query = "INSERT INTO delivery_users (username, password, usertype)
+                    VALUES(:username, :password, :usertype)";
+        $statement = $this->_dbHandle->prepare($query);
+
+        $statement->bindParam('username', $username);
+        $statement->bindParam('password', $password);
+        $statement->bindParam('usertype', $usertype);
+        $statement->execute();
+    }
+
+    public function getAllUsers(){
+        $query = "SELECT * FROM delivery_users WHERE usertype LIKE 2";
+
+        $statement = $this->_dbHandle->prepare($query);
+        $statement->execute();
+
+        $dataset = [];
+        while ($row = $statement->fetch()){
+            $dataset[] = new DeliveryUser($row);
+        }
+        return $dataset;
+    }
+
+    public function deleteUser($id){
+        $query = "DELETE FROM delivery_users WHERE userid=:id";
+        $statement = $this->_dbHandle->prepare($query);
+
+        $statement->bindParam('id', $id);
+        $statement->execute();
+    }
+
+    public function updateUser($id, $name, $pass, $usertype){
+        $query = "UPDATE delivery_users 
+                  SET username = :name, password = :pass, usertype = :usertype
+                  WHERE userid = :id";
+        $statement = $this->_dbHandle->prepare($query);
+
+        $statement->bindParam(':name', $name);
+        $statement->bindParam(':pass', $pass);
+        $statement->bindParam(':usertype', $usertype);
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+    }
+
+    public function selectWithID($id){
+        $query = "SELECT * FROM delivery_users WHERE userid =:id";
+        $statement = $this->_dbHandle->prepare($query);
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+
+        $dataset = [];
+        while ($row = $statement->fetch()){
+            $dataset[] = new DeliveryUser($row);
+        }
+        return $dataset;
     }
 }

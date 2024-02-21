@@ -12,9 +12,18 @@ if (isset($_POST['loginbutton'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+    /* TODO:
+    Change logic for this if statement to query database for username and password
+    e.g. $query = "SELECT * FROM delivery_users";
+    foreach($row){
+    if username == row
+    $_SESSION['login] == username
+    */
     if ($username == 'lee' && $password == '123456'){
         $_SESSION['login'] = $username;
     } elseif ($username == 'rahid' && $password == 'polyjuice23'){
+        $_SESSION['login'] = $username;
+    } elseif ($username == 'admin' && $password == '123456'){
         $_SESSION['login'] = $username;
     }
     else {

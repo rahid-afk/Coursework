@@ -1,0 +1,36 @@
+<?php require ('templates/header.phtml'); ?>
+
+<?php foreach ($view->deliveryPointSet as $deliveryPoint){
+   $id = $deliveryPoint->getID();
+   $name = $deliveryPoint->getName();
+   $address = $deliveryPoint->getAddress();
+   $city = $deliveryPoint->getCity();
+   $postcode = $deliveryPoint->getPostcode();
+   $deliverer = $deliveryPoint->getDeliverer();
+   $lat = $deliveryPoint->getLat();
+   $long = $deliveryPoint->getLong();
+   $status = $deliveryPoint->getStatus();
+}
+?>
+
+<form action=" <?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-control">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" value="<?php echo $id ?>" class="form-control" readonly>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="<?php echo $name ?>" class="form-control" required>
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" value="<?php echo $address ?>" class="form-control" required>
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" value="<?php echo $city ?>" class="form-control" required>
+    <label for="postcode">Postcode:</label>
+    <input type="text" id="postcode" name="postcode" value="<?php echo $postcode ?>" class="form-control" required>
+    <label for="deliverer">Deliverer:</label>
+    <input type="text" id="deliverer" name="deliverer" value="<?php echo $deliverer ?>" class="form-control" required>
+    <label for="lat">Latitude:</label>
+    <input type="text" id="lat" name="lat" value="<?php echo $lat ?>" class="form-control" required>
+    <label for="long">Longitude:</label>
+    <input type="text" id="long" name="long" value="<?php echo $long ?>" class="form-control" required>
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status" value="<?php echo $status ?>" class="form-control" required>
+    <input type="submit" name="updateRecord" class="form-control" required>
+</form>
