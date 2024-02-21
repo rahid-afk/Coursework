@@ -85,16 +85,7 @@ class DeliveryPointSet
         return $dataset;
     }
 
-    public function createNewRecord(){
-        $name = $_POST['name'];
-        $address = $_POST['address'];
-        $city = $_POST['city'];
-        $postcode = $_POST['postcode'];
-        $deliverer = $_POST['deliverer'];
-        $lat = $_POST['lat'];
-        $long = $_POST['long'];
-        $status = $_POST['status'];
-
+    public function createNewRecord($name, $address, $city, $postcode, $deliverer, $lat, $long, $status){
         $query = "INSERT INTO delivery_point (name, address, city, postcode, deliverer, latitude, longitude, status) 
               VALUES (:name, :address, :city, :postcode, :deliverer, :lat, :long, :status)";
         $statement = $this->_dbHandle->prepare($query);
@@ -129,16 +120,7 @@ class DeliveryPointSet
         return $dataset;
     }
 
-    public function updateRecord($id){
-        $name = $_POST['name'];
-        $address = $_POST['address'];
-        $city = $_POST['city'];
-        $postcode = $_POST['postcode'];
-        $deliverer = $_POST['deliverer'];
-        $lat = $_POST['lat'];
-        $long = $_POST['long'];
-        $status = $_POST['status'];
-
+    public function updateRecord($id, $name, $address, $city, $postcode, $deliverer, $lat, $long, $status){
         $query = "UPDATE delivery_point 
               SET name=:name, address=:address, city=:city, postcode=:postcode, deliverer=:deliverer, latitude=:lat, longitude=:long, status=:status
               WHERE id = :id";

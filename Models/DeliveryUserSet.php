@@ -15,11 +15,7 @@ class DeliveryUserSet {
         $query = "SELECT userid FROM delivery_users WHERE username LIKE '%" . $username . "%'";
     }
 
-    public function createUser(){
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $usertype = $_POST['usertype'];
-
+    public function createUser($username, $password, $usertype){
         $query = "INSERT INTO delivery_users (username, password, usertype)
                     VALUES(:username, :password, :usertype)";
         $statement = $this->_dbHandle->prepare($query);

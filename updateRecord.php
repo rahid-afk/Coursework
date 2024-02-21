@@ -9,7 +9,16 @@ $deliveryPointSet = new DeliveryPointSet();
 $id = $_GET['id'];
 if (isset($_POST['updateRecord'])){
     $id = $_POST['id'];
-    $view->deliveryPointSet = $deliveryPointSet->updateRecord($id);
+    $name = $_POST['name'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $postcode = $_POST['postcode'];
+    $deliverer = $_POST['deliverer'];
+    $lat = $_POST['lat'];
+    $long = $_POST['long'];
+    $status = $_POST['status'];
+
+    $view->deliveryPointSet = $deliveryPointSet->updateRecord($id, $name, $address, $city, $postcode, $deliverer, $lat, $long, $status);
     header("Location: index.php");
 }
 if (isset($_GET['id'])){
