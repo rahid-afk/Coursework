@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Maps Example</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 500px;
+        }
+    </style>
+<!--    <script async defer src="https://maps.googleapis.com/maps/api/js?key=--><?php //echo $apiKey; ?><!--&callback=initMap" type="text/javascript"></script>-->
+    <script>
+        var map;
+        var deliveryPoints = <?php echo $delivery_points_json; ?>;
+
+        function initMap() {
+            var defaultLatLng = new google.maps.LatLng(-33.92, 151.25);
+
+            var mapOptions = {
+                zoom: 10,
+                center: defaultLatLng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    map.setCenter(userLatLng);
+                }, function() {
+                    handleLocationError(true, map.getCenter());
+                });
+            } else {
+                handleLocationError(false, map.getCenter());
+            }
+
+            /* Creating red pin markers for each delivery point */
+            var bounds = new google.maps.LatLngBounds();
+            var infowindow = new google.maps.InfoWindow();
+
+            deliveryPoints.forEach(function (point){
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(point.latitude, point.longitude),
+                    map: map,
+                    title: point.name
+                });
+
+                bounds.extend(marker.position);
+
+                google.maps.event.addListener(marker, 'click', (function(marker, point) {
+                    return function() {
+                        var content = '<div>' +
+                            '<h3>Parcel ID: ' + point.id + '<h3>' +
+                            '<p><strong>' + point.name + '</strong></p>' +
+                            '<p><strong>' + point.address + ', ' +
+                            point.city + ', ' +
+                            point.postcode + '</strong></p>' +
+                            '<p><strong>' + point.latitude + ', ' +
+                            point.longitude + '</strong></p>' +
+                            '</div>';
+                        infowindow.setContent(content);
+                        infowindow.open(map, marker);
+                    }
+                })(marker, point));
+            });
+
+            // map.fitBounds(bounds);
+
+        }
+
+        function handleLocationError(browserHasGeolocation, pos) {
+            console.log(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?php echo $apiKey; ?>&callback=initMap" type="text/javascript"></script>
+</head>
+<body>
+<div id="map"></div>
+</body>
+</html>
