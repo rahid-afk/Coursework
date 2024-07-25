@@ -1,55 +1,30 @@
 <?php require('templates/header.phtml') ?>
 
-<?php
-//$connect = mysqli_connect("poseidon.salford.ac.uk", "aee805", "Polyjuice23!", "aee805");
-//$pageLimit = 20; /* Setting a limit for how many records will show at one time on each page */
-//if (!isset($_GET['page'])) {
-//    $page = 1;
-//} else {
-//    $page = $_GET['page'];
-//}
-//$firstPage = ($page - 1) * $pageLimit;
-///* Obtaining deliverer information */
-//$query = "SELECT userid FROM delivery_users WHERE username LIKE '%" . $_SESSION['login'] . "%'";
-//$userid = mysqli_query($connect, $query);
-//$row = mysqli_fetch_assoc($userid);
-//if ($row){
-//    $delivererid = $row['userid'];
-//}
-///* Filtering with whatever the deliverer has inputted in the search */
-//if (isset($_POST['search'])) {
-//    $query = "SELECT * FROM delivery_point WHERE id LIKE '%" . $_POST['idSearch'] . "%'
-//    AND name LIKE '%" . $_POST['nameSearch'] . "%'
-//    AND address LIKE '%" . $_POST['addressSearch'] . "%'
-//    AND city LIKE '%" . $_POST['citySearch'] . "%'
-//    AND postcode LIKE '%" . $_POST['postSearch'] . "%'
-//    AND latitude LIKE '%" . $_POST['latSearch'] . "%'
-//    AND longitude LIKE '%" . $_POST['longSearch'] . "%'
-//    AND deliverer LIKE '%" . $delivererid . "%'
-//    LIMIT " . $firstPage . ',' . $pageLimit;
-//
-//    $search_result = mysqli_query($connect, $query);
-//    /* Button to clear the search filters and return the table to normal */
-//} elseif (isset($_POST['clear'])) {
-//    $query = "SELECT * FROM delivery_point WHERE deliverer LIKE '%" . $delivererid . "%' LIMIT " . $firstPage . ',' . $pageLimit;
-//    $search_result = mysqli_query($connect, $query);
-//} else {
-//    $query = "SELECT * FROM delivery_point WHERE deliverer LIKE '%" . $delivererid . "%' LIMIT " . $firstPage . ',' . $pageLimit;
-//    $search_result = mysqli_query($connect, $query);
-//}
-?>
-    <!-- Form for filtering through HTML table in Deliverer Page -->
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-        <label class="h4">Filter Table:</label><br>
-        <input type="text" id="id" name="idSearch" placeholder="ID" class="form-control">
-        <input type="text" id="name" name="nameSearch" placeholder="Name" class="form-control">
-        <input type="text" id="address" name="addressSearch" placeholder="Address" class="form-control">
-        <input type="text" id="city" name="citySearch" placeholder="City" class="form-control">
-        <input type="text" id="postcode" name="postSearch" placeholder="Postcode" class="form-control">
-        <input type="text" id="lat" name="latSearch" placeholder="Latitude" class="form-control">
-        <input type="text" id="long" name="longSearch" placeholder="Longitude" class="form-control"><br>
-        <input type="submit" name="search" value="Filter" class="form-control">
-        <input type="submit" name="clear" value="Clear Filter" class="form-control">
+<!-- Live Search -->
+    <script>
+        function showResult(str) {
+            if (str.length==0) {
+                document.getElementById("livesearch").innerHTML="";
+                document.getElementById("livesearch").style.border="0px";
+                return;
+            }
+            var xmlhttp=new XMLHttpRequest();
+            xmlhttp.onreadystatechange=function() {
+                if (this.readyState==4 && this.status==200) {
+                    document.getElementById("livesearch").innerHTML=this.responseText;
+                    document.getElementById("livesearch").style.border="1px solid #A5ACB2";
+                }
+            }
+            xmlhttp.open("GET","livesearch.php?q="+str,true);
+            xmlhttp.send();
+        }
+    </script>
+    </head>
+    <body>
+
+    <form>
+        <input type="text" size="30" onkeyup="showResult(this.value)">
+        <div id="livesearch"></div>
     </form>
 
     <!-- Form to display the deliverers deliveries in HTML table -->
@@ -65,103 +40,78 @@
                 <th>Postcode</th>
                 <th>Lat</th>
                 <th>Long</th>
+                <th>Status</th>
                 <th>Picture</th>
             </tr>
             </thead>
             <tbody>
-            <!--            --><?php
-            $sq = mysqli_query($connect, "SELECT id FROM delivery_point");
-            $row_count = $sq->num_rows;
-            $totalPages = ceil($row_count / 10);
-
-            if (empty($_GET['page']) || $_GET['page'] == 1) {
-                $sql = "SELECT * FROM delivery_point order by id ASC LIMIT 0, 10";
-                $i = 1;
-            } else {
-                $i = 10 * ($_GET['page'] - 1);
-                $sql = "SELECT * FROM delivery_point order by id ASC LIMIT " . $i . ", 10";
-                $i = 10 * $_GET['page'] - 9;
-            }
-            $result = mysqli_query($connect, $sql);
-            ?>
-
-<!--                    --><?php //foreach ($view->deliveryPointsSet as $deliveryPoint) {
-//                        echo '<tr> <td>' . $deliveryPoint->getID() .
-//                            '</td> <td>' . $deliveryPoint->getName() .
-//                            '</td> <td>' . $deliveryPoint->getAddress() .
-//                            '</td> <td>' . $deliveryPoint->getCity() .
-//                            '</td> <td>' . $deliveryPoint->getPostcode() .
-//                            '</td> <td>' . $deliveryPoint->getLat() .
-//                            '</td> <td>' . $deliveryPoint->getLong() .
-//                            '</td><td>' . '<img src="images/' . $deliveryPoint->getPhotoName() . '" alt="no picture" />' . '</td>';
-//                    } ?>
-            <?php while ($row = mysqli_fetch_array($search_result)) { ?>
+            <?php foreach ($view->deliveryPoints as $deliveryPoint) { ?>
                 <tr>
-                    <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['name']; ?></td>
-                    <td><?php echo $row['address']; ?></td>
-                    <td><?php echo $row['city']; ?></td>
-                    <td><?php echo $row['postcode']; ?></td>
-                    <td><?php echo $row['latitude']; ?></td>
-                    <td><?php echo $row['longitude']; ?></td>
-<!--                    <td> <img src="images/" --><?php //$view->deliveryPointsSet->getPhotoName()?><!-- alt="no picture" ></td>-->
+                    <td><?php echo $deliveryPoint->getID();  ?></td>
+                    <td><?php echo $deliveryPoint->getName(); ?></td>
+                    <td><?php echo $deliveryPoint->getAddress(); ?></td>
+                    <td><?php echo $deliveryPoint->getCity(); ?></td>
+                    <td><?php echo $deliveryPoint->getPostcode(); ?></td>
+                    <td><?php echo $deliveryPoint->getLat(); ?></td>
+                    <td><?php echo $deliveryPoint->getLong(); ?></td>
+                    <td>
+                        <!-- Checking if points are delivered already-->
+                        <?php if ($deliveryPoint->getStatus() != 5) { ?>
+                            <form action="updateStatus.php" method="post">
+                                <input type="hidden" name="id" value="<?php echo $deliveryPoint->getID(); ?>">
+                                <input type="submit" class="btn btn-info" value="Mark As Delivered">
+                            </form>
+                        <?php } else { ?>
+                            Delivered
+                        <?php } ?>
+                    </td>
                 </tr>
-                <?php $i++;
-            } ?>
+            <?php } ?>
             </tbody>
+
+<!--            <tbody>-->
+<!--            --><?php //foreach ($view->deliveryPoints as $deliveryPoint) {
+//                echo '<tr> <td>' . $deliveryPoint->getID() .
+//                    '</td> <td>' . $deliveryPoint->getName() .
+//                    '</td> <td>' . $deliveryPoint->getAddress() .
+//                    '</td> <td>' . $deliveryPoint->getCity() .
+//                    '</td> <td>' . $deliveryPoint->getPostcode() .
+//                    '</td> <td>' . $deliveryPoint->getLat() .
+//                    '</td> <td>' . $deliveryPoint->getLong() .
+//                    '</td> <td>' . $deliveryPoint->getStatus() . " " .
+//                    '<div class="btn-group" role="group" aria-label="Record Actions"><a class="btn btn-info" href="updateStatus.php' . $deliveryPoint->getID() . '">Delivered</a>&nbsp; </div></td>';
+////                    '</td><td>' . '<img src="images/' . $deliveryPoint->getPhotoName() . '" alt="no picture" />' . '</td>';
+//            } ?>
+<!--            </tbody>-->
         </table>
-        <div class="pagination">
-            <?php
-            /* Check if there is more than one page */
-            if ($totalPages > 1) {
-                /* If page is greater than one then add the previous arrow symbol as the first link */
-                if (!empty($_GET['page']) && $_GET['page'] > 1) {
-                    $prePage = $_GET['page'] - 1;
-                    echo "<a href=\"index.php?page=$prePage\">&laquo;</a>";
-                }
-                /* Determine the range of page numbers to display based on the current page */
-                if (empty($_GET['page']) || $_GET['page'] < 10) {
-                    $k = 2;
-                    $num = 10;
 
-                    if ($_GET['page'] == 2 || $_GET['page'] == 1) {
-                        $k = 1;
-                    }
-                } elseif ($_GET['page'] < $totalPages) {
-                    $k = $_GET['page'] - 4;
-                    $num = $_GET['page'] + 4;
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <?php
+                $startPage = max(1, $view->currentPage - 4);
+                $endPage = min($startPage + 9, $view->totalPages);
+
+                //Previous Page buttons
+                if ($view->currentPage > 1) {
+                    echo '<li class="page-item disabled"><span class="page-link">Previous</span>';
+                }
+
+                //Limiting page numbers to 10
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    echo '<li class="page-item ' . ($i == $view->currentPage ? 'active' : '') . '">
+                            <a class="page-link" href="?page=' . $i . '">' . $i . '</a>
+                            </li>';
+                }
+
+                //Next Page Link
+                if ($view->currentPage < $view->totalPages) {
+                    echo '<li class="page-item"><a class="page-link" href="?page=' .($view->currentPage + 1) . '">Next</a></li>';
                 } else {
-                    $k = $_GET['page'] - 10;
-                    $num = $totalPages;
+                    echo '<li class="page-item disabled"><span class="page-link">Next</span></li>';
                 }
 
-                /* Display the pagination links*/
-                if ($_GET['page'] == "") {
-                    /* Set class of current page to active for CSS styling */
-                    echo "<a href=\"#\" class=\"active\">l</a>";
-                }
-                for ($n = $k; $n <= $num && $n <= $totalPages; $n++) {
-                    if ($_GET['page'] == $n) {
-                        echo "<a href=\"#\" class=\"active\">$n</a>";
-                    } else {
-                        echo "<a href=\"index.php?page=$n\">$n</a>";
-                    }
-                }
-
-                /* Add the next arrow symbol as the last link */
-                if ($_GET['page'] < 1) {
-                    $nextPage = 2;
-                    echo "<a href=\"index.php?page=$nextPage\">&raquo;</a>";
-                } elseif ($_GET['page'] < $totalPages) {
-                    $nextPage = $_GET['page'] + 1;
-                    echo "<a href=\"index.php?page=$nextPage\">&raquo;</a>";
-                } else {
-                    echo "<a href=\"#\" class=\"active\">No More</a>";
-                }
-            } else {
-                echo "<a href=\"#\" class=\"active\">No More</a>";
-            }
-            ?>
-        </div>
+                ?>
+            </ul>
+        </nav>
     </form>
 <?php require('templates/footer.phtml') ?>

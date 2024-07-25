@@ -145,4 +145,55 @@ class DeliveryPointSet
         $statement->bindParam(':id', $id);
         $statement->execute();
     }
+
+    public function getTotalRecords ($delivererId){
+        $query = "SELECT COUNT(*) FROM delivery_point WHERE deliverer =:delivererId";
+        $statement = $this->_dbHandle->prepare($query);
+        $statement->bindParam(':delivererId', $delivererId);
+        $statement->execute();
+
+        return $statement->fetchColumn();
+    }
+
+    public function getDeliveryPoints($delivererId, $page, $pageLimit){
+        $offset = ($page -1) * $pageLimit;
+        $query = "SELECT * FROM delivery_point WHERE deliverer =:delivererId ORDER BY id ASC LIMIT :offset, :limit";
+        $statement = $this->_dbHandle->prepare($query);
+        $statement->bindParam(':delivererId', $delivererId, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->bindParam(':limit', $pageLimit, PDO::PARAM_INT);
+        $statement->execute();
+
+        $dataset = [];
+        while ($row = $statement->fetch()){
+            $dataset[] = new DeliveryPoint($row);
+        }
+
+        return $dataset;
+    }
+
+    public function getDeliveryPointsForDeliverer($delivererID){
+        $query = "SELECT * FROM delivery_point WHERE deliverer =:delivererId";
+        $statement = $this->_dbHandle->prepare($query);
+        $statement->bindParam(':delivererId', $delivererID);
+        $statement->execute();
+
+        $dataset = [];
+        while ($row = $statement->fetch()){
+            $dataset[] = new DeliveryPoint($row);
+        }
+
+        var_dump($dataset);
+
+        return $dataset;
+    }
+
+    public function updateStatus($id, $status){
+//        $query = "UPDATE delivery_point SET status =:status WHERE id =:id";
+        $query = "UPDATE delivery_point SET status = " . $status . " WHERE id = " . $id;
+        $statement = $this->_dbHandle->prepare($query);
+//        $statement->bindParam(':id', $id);
+//        $statement->bindParam(':status', $status);
+        $statement->execute();
+    }
 }

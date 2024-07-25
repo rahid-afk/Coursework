@@ -18,7 +18,7 @@ if (isset($_SESSION['login'])){
         require_once('managerpage.php');
     } else {
         require_once ("delivererpage.php");
-        header("Location: index.php?page=1");
+//        header("Location: index.php?page=1");
         exit;
     }
 //    require_once ('loginControl.php');

@@ -1,10 +1,12 @@
 <?php
 session_start();
 
+require_once ('Models/DeliveryUserSet.php');
 
 $view = new stdClass();
 $view->pageTitle = 'Log In';
 
+$deliveryUserSet = new DeliveryUserSet();
 
 /* */
 
@@ -12,23 +14,23 @@ if (isset($_POST['loginbutton'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    /* TODO:
-    Change logic for this if statement to query database for username and password
-    e.g. $query = "SELECT * FROM delivery_users";
-    foreach($row){
-    if username == row
-    $_SESSION['login] == username
-    */
-    if ($username == 'lee' && $password == '123456'){
-        $_SESSION['login'] = $username;
-    } elseif ($username == 'rahid' && $password == 'polyjuice23'){
-        $_SESSION['login'] = $username;
-    } elseif ($username == 'admin' && $password == '123456'){
+    $user = $deliveryUserSet->fetchUsername($username);
+    $pass = $deliveryUserSet->fetchPassword($username);
+
+    if ($user === $username && $pass === $password) {
         $_SESSION['login'] = $username;
     }
-    else {
-        echo "Error in username and/or password";
-    }
+
+//    if ($username == 'lee' && $password == '123456'){
+//        $_SESSION['login'] = $username;
+//    } elseif ($username == 'rahid' && $password == 'polyjuice23'){
+//        $_SESSION['login'] = $username;
+//    } elseif ($username == 'admin' && $password == '123456'){
+//        $_SESSION['login'] = $username;
+//    }
+//    else {
+//        echo "Error in username and/or password";
+//    }
 
 //    $login = new Login();
 //    if ($login->authenticate($username, $password)) {

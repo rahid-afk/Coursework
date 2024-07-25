@@ -12,7 +12,14 @@ class DeliveryUserSet {
     }
 
     public function getDelivererID($username){
-        $query = "SELECT userid FROM delivery_users WHERE username LIKE '%" . $username . "%'";
+        $query = "SELECT userid FROM delivery_users WHERE username =:username AND usertype = 2";
+        $statement = $this->_dbHandle->prepare($query);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+        $statement->execute();
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $result ? $result['userid'] : null;
     }
 
     public function createUser($username, $password, $usertype){
@@ -71,5 +78,33 @@ class DeliveryUserSet {
             $dataset[] = new DeliveryUser($row);
         }
         return $dataset;
+    }
+
+    public function fetchUsername($username){
+        $query = "SELECT username FROM delivery_users WHERE username=:username";
+        $statement = $this->_dbHandle->prepare($query);
+
+        $statement->bindParam(':username', $username);
+        $statement->execute();
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($result){
+            return $result['username'];
+        }
+    }
+
+    public function fetchPassword($username){
+        $query = "SELECT password FROM delivery_users WHERE username=:username";
+        $statement = $this->_dbHandle->prepare($query);
+
+        $statement->bindParam(':username', $username);
+        $statement->execute();
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($result){
+            return $result['password'];
+        }
     }
 }
