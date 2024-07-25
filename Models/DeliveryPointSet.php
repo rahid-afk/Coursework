@@ -183,8 +183,6 @@ class DeliveryPointSet
             $dataset[] = new DeliveryPoint($row);
         }
 
-        var_dump($dataset);
-
         return $dataset;
     }
 
